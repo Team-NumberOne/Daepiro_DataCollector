@@ -2,7 +2,7 @@ import requests
 import boto3
 from botocore.exceptions import ClientError
 import json
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import re
 
 def preprocessing_address(address):
@@ -136,8 +136,12 @@ def lambda_handler(event, context):
 	page_no = 1
 	num_of_rows = 200
 
-	# 오늘 날짜를 YYYYMMDD 형식으로 설정
-	crt_dt = (datetime.now()).strftime("%Y%m%d")
+	# 현재 UTC 시간 구하기
+	utc_now = datetime.now(timezone.utc)
+	# 서울 시간대로 변환하기
+	seoul_timezone = timezone(timedelta(hours=9))
+	seoul_now = utc_now.astimezone(seoul_timezone)
+	crt_dt = seoul_now.strftime("%Y%m%d")
 
 	# 최근 재난 메시지 ID 조회
 	latest_message_id = get_latest_message_id(api_base_url, headers)
