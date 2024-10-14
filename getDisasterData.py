@@ -6,7 +6,10 @@ from datetime import datetime, timezone, timedelta
 import re
 
 def preprocessing_address(address):
-	return re.sub(r'\b(\w+)( \1\b)+', r'\1', address).strip()
+	result = re.sub(r'\b(\w+)( \1\b)+', r'\1', address).strip()
+	if result == "부천시 오정구":
+		return "경기도 부천시 오정구"
+	return result
 
 def getSecret():
 	client = boto3.client("secretsmanager")
