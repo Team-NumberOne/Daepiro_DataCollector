@@ -21,23 +21,34 @@ def getSecret():
 
 # 재난 메시지 클래스를 정의
 class DisasterMessage:
-	def __init__(self, msg_cn, rcptn_rgn_nm, crt_dt, dst_se_nm, sn):
-		self.msg_cn = msg_cn  # 메시지 내용
-		self.rcptn_rgn_nm = rcptn_rgn_nm  # 수신 지역
-		self.crt_dt = crt_dt  # 생성일시
-		self.dst_se_nm = dst_se_nm  # 재난 종류
-		self.sn = sn  # 일련번호 (SN)
+    def __init__(self, msg_cn, rcptn_rgn_nm, crt_dt, dst_se_nm, sn):
+        self.msg_cn = msg_cn  # 메시지 내용
+        self.rcptn_rgn_nm = rcptn_rgn_nm  # 수신 지역
+        self.crt_dt = crt_dt  # 생성일시
+        self.sn = sn  # 일련번호 (SN)
 
-	def __repr__(self):
-		return (
-			f"------------\n"
-			f"Message Content: {self.msg_cn}\n"
-			f"Region: {self.rcptn_rgn_nm}\n"
-			f"Created Date: {self.crt_dt}\n"
-			f"Disaster Type: {self.dst_se_nm}\n"
-			f"SN: {self.sn}\n"
-			f"------------\n"
-		)
+        # 재난 종류 수정
+        if dst_se_nm == "지진해일":
+            self.dst_se_nm = "지진"
+        elif dst_se_nm == "황사" or dst_se_nm is None:
+            self.dst_se_nm = "기타"
+        elif dst_se_nm in ["폭동", "민방공"]:
+            self.dst_se_nm = "비상사태"
+        elif dst_se_nm in ["교통통제", "교통사고"]:
+            self.dst_se_nm = "교통"
+        else:
+            self.dst_se_nm = dst_se_nm
+
+    def __repr__(self):
+        return (
+            f"------------\n"
+            f"Message Content: {self.msg_cn}\n"
+            f"Region: {self.rcptn_rgn_nm}\n"
+            f"Created Date: {self.crt_dt}\n"
+            f"Disaster Type: {self.dst_se_nm}\n"
+            f"SN: {self.sn}\n"
+            f"------------\n"
+        )
 
 # 최신 재난 메시지 조회
 def get_latest_message_id(base_url, headers):
